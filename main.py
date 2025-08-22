@@ -28,5 +28,3 @@ async def ingest_file(
         "user": user,
         "namespace": namespace
     }
-
-    uvicorn.run(app, host="0.0.0.0", port=port)
