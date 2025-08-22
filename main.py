@@ -1,10 +1,9 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional
 
 app = FastAPI()
 
-# CORS (opcional para testes com frontend ou Postman)
+# Permitir CORS (opcional, mas útil se usar com frontends)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,18 +12,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/ingest-file")
-async def ingest_file(
-    file: UploadFile = File(...),
-    user: str = Form(...),
-    namespace: str = Form(...)
-):
-    # Para teste, apenas printa ou retorna os dados
-    contents = await file.read()
-    return {
-        "filename": file.filename,
-        "user": user,
-        "namespace": namespace,
-        "filesize_bytes": len(contents)
-    }
+@app.get("/")
+def root():
+    return {"message": "API online e funcionando."}
 
+@app.post("/ingest-file")
+async def ingest_file(file: UploadFile = File(...)):
+    content = await file.read()
+    # Lógica de ingestão aqui
+    return {"filename": file.filename, "size": len(content)}
